@@ -23,10 +23,12 @@ Parser object;
 Node *mainRoot = new Node();  
 Stack stack; 
 Runtime runtime; 
+string fileTemp; 
 
 //If no argument, open a txt file
   if(argc == 1){
-      string filename = "test.txt";
+      string filename = "out.txt";
+	  string outPut = "out.asm"; 
       string temp;
       ofstream file;
       file.open(filename.c_str());
@@ -37,6 +39,9 @@ Runtime runtime;
      ifstream infile;
 	 cout << "Recieved file" << endl; 
 	 mainRoot = object.parse(infile,filename);
+	 runtime.run(mainRoot,outPut); 
+	 cout << "out.asm" << endl; 
+	 
     // stack.printPreorder(mainRoot); 
 	 //stack.makeStack(mainRoot);    
   	 
@@ -47,11 +52,12 @@ Runtime runtime;
       string file = argv[1];
   	  string filename = file + ".input1";
   	  ifstream infile;  
-
+	  string outPut = file + ".asm";  
   	  mainRoot = object.parse(infile,filename); 
   	//  stack.printPreorder(mainRoot);
   	 // stack.makeStack(mainRoot); 
-  	 runtime.run(mainRoot);  
+  	 runtime.run(mainRoot,outPut);  
+	 cout << outPut << endl;  
    }
   //If another file is piped
    else if (argc > 2 ){
