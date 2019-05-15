@@ -60,7 +60,6 @@ void Runtime::statements(Node *branch, Stack stack) {
             printToFile("WRITE",global);
 	    }
 	    else{
-            printToFile("STORE",result);
             printToFile("WRITE",result);
 	    }
 	}
@@ -86,10 +85,7 @@ void Runtime::statements(Node *branch, Stack stack) {
         }
     }
 
-
-
-
-	else if (branch->key == "IF"){
+    else if(branch->key == "IF"){
         cout << branch->left->id << "IFF" << endl;
         if(branch->left->id == "intNumTkn"){
             printToFile("WRITE","1");
