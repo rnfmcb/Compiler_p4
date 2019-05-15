@@ -25,17 +25,17 @@ void Runtime::run(Node *&tree, string file) {
 	Stack stack;
 	stack.makeStack(*&tree);
 	StackNode *stackPtr = new StackNode;
-    //stackPtr = stack.printStack();  
-	asmFile.open(file.c_str(),ios::out); 
-	
+    //stackPtr = stack.printStack();
+	asmFile.open(file.c_str(),ios::out);
+
 
 	//Check statements
 	statements(tree->right->right->left->center, stack);
 	statements(tree->right->right->right,stack);
    	string result;
 	printToFile("STOP",result);
-	//vars(tree->left);
-	asmFile.close(); 
+	vars(tree->left);
+	asmFile.close();
 }
 
 void Runtime::statements(Node *branch, Stack stack) {
@@ -46,16 +46,18 @@ void Runtime::statements(Node *branch, Stack stack) {
 		result = branch->value;
 		global = result;
 		printToFile( "READ", result);
-		printToFile("PUSH","");
 		printToFile("LOAD",result);
-		printToFile("STACKW","0");
+		printToFile("STORE",result);
 
 	}
 	else if (branch->key == "out") {
 	    string result = branch->center->value;
 	   // cout << result << endl;
 	    if(result == "-"){
-            checkM(branch->center);
+            printToFile("LOAD",global);
+            printToFile("MULT","-1");
+            printToFile("STORE",global);
+            printToFile("WRITE",global);
 	    }
 	    else{
             printToFile("STORE",result);
@@ -86,34 +88,40 @@ void Runtime::statements(Node *branch, Stack stack) {
 
 
 
+
 	else if (branch->key == "IF"){
-        //cout << branch->left->key;
-        string first = checkExpr(branch->left);
-        printToFile("IN: LOAD",first);
-        printToFile("STORE",first);
-        printToFile("LOAD",first);
-        string second = checkExpr(branch->center);
-        printToFile("SUB",second);
-        //cout << branch->operate << "operate" << endl;
-        if(branch->operate == "= >"){
-          printToFile("BRNEG","OUT");
-         // printToFile("ADD",second);
-        }
-        if(branch->operate == "= <"){
-           printToFile("BRPOS","OUT");
-          // printToFile("ADD",second);
-        }
-        if(branch->right->center->key == "out"){
-            string output = branch->right->center->center->value;
-            printToFile("WRITE",output);
-            printToFile("OUT:","STOP");
+        cout << branch->left->id << "IFF" << endl;
+        if(branch->left->id == "intNumTkn"){
+            printToFile("WRITE","1");
         }
         else{
-            statements(branch->right->center,stack);
-        }
+            cout << branch->left->key;
+            string first = checkExpr(branch->left);
+            printToFile("IN: LOAD",first);
+            printToFile("STORE",first);
+            printToFile("LOAD",first);
+            string second = checkExpr(branch->center);
+            printToFile("SUB",second);
+            //cout << branch->operate << "operate" << endl;
+            if(branch->operate == "= >"){
+                printToFile("BRNEG","OUT");
+                // printToFile("ADD",second);
+            }
+            if(branch->operate == "= <"){
+                printToFile("BRPOS","OUT");
+                // printToFile("ADD",second);
+            }
+            if(branch->right->center->key == "out"){
+                string output = branch->right->center->center->value;
+                printToFile("WRITE",output);
+                printToFile("OUT:","STOP");
+            }
+            else{
+                statements(branch->right->center,stack);
+            }
+    }
 
-
-	}
+}
 
 	else if (branch->key == "Loop"){
         //cout << branch->left->key;
@@ -126,25 +134,25 @@ void Runtime::statements(Node *branch, Stack stack) {
         printToFile("LOAD",first);
         printToFile("SUB","1");
         printToFile("BR","In");
-        printToFile("OUT:","STOP");      
+        printToFile("OUT:","STOP");
 
 
 	}
 
 	else if(branch->key =="assign"){
         printToFile("LOAD",branch->value);
-		printToFile("ADD","1"); 
+		printToFile("ADD","1");
         printToFile("STORE",branch->value);
         printToFile("WRITE",branch->value);
 	}
 	else if (branch->key == "mstat"){
 		if(branch->left != NULL)
-			statements(branch->left,stack); 
-	} 
-	
+			statements(branch->left,stack);
+	}
+
 	else{
-		statements(branch->center,stack); 
-	} 
+		statements(branch->center,stack);
+	}
   }
 }
 
@@ -175,18 +183,12 @@ void Runtime::vars(Node *&tree){
 
 void Runtime::checkM(Node *tree){
     if(tree!= NULL){
-        //cout << tree->id << "m id" << endl;
-        if(tree->key == "M" | tree->id == "-"){
-            if(tree->id == "IDTkn" | tree->id == "intNumTkn") {
-                printToFile("LOAD",tree->value);
-                printToFile("MULT","-1");
-                printToFile("WRITE",tree->value);                            }
-            }
-        checkM(tree->center);
+        cout << tree->id << "m id" << endl;
+        if(tree->id == "minusTkn") {
+            printToFile("MULT","-1");
+
         }
-        else{
-            checkM(tree->center);
-        }
+    }
 }
 
 string Runtime:: checkExpr(Node *tree){
@@ -201,7 +203,7 @@ string Runtime:: checkExpr(Node *tree){
 }
 
 void Runtime::printToFile( string command, string value) {
-		
+
 		asmFile << command << " " << value << endl;
 
 }
