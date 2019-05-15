@@ -107,14 +107,14 @@ void Runtime::statements(Node *branch, Stack stack) {
                 printToFile("BRPOS","OUT");
                 // printToFile("ADD",second);
             }
-            if(branch->right->center->key == "out"){
+            /*if(branch->right->center->key == "out"){
                 string output = branch->right->center->center->value;
                 printToFile("WRITE",output);
                 printToFile("OUT:","STOP");
-            }
-            else{
+            }*/
+            /*else{
                 statements(branch->right->center,stack);
-            }
+            }*/
     }
 
 }
@@ -125,7 +125,7 @@ void Runtime::statements(Node *branch, Stack stack) {
         printToFile("In: LOAD",first);
         printToFile("SUB","1");
         printToFile("STORE",first);
-        printToFile("BRZNEG","OUT");
+        printToFile("BRNEG","OUT");
         printToFile("WRITE",first);
         printToFile("LOAD",first);
         printToFile("SUB","1");
