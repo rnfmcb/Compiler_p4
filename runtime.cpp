@@ -86,24 +86,18 @@ void Runtime::statements(Node *branch, Stack stack) {
             printToFile("STORE",first);
             printToFile("LOAD",first);
             string second = checkExpr(branch->center);
-            printToFile("SUB",second);
-            //cout << branch->operate << "operate" << endl;
-            if(branch->operate == "= >"){
-                printToFile("BRNEG","OUT");
-                // printToFile("ADD",second);
-            }
-            if(branch->operate == "= <"){
-                printToFile("BRPOS","OUT");
-                // printToFile("ADD",second);
-            }
-            /*if(branch->right->center->key == "out"){
-                string output = branch->right->center->center->value;
-                printToFile("WRITE",output);
-                printToFile("OUT:","STOP");
-            }*/
-            /*else{
-                statements(branch->right->center,stack);
-            }*/
+            printToFile("SUB","1");
+            printToFile("BRNEG","OUT");
+            printToFile("ADD","1");
+            printToFile("In:LOAD",first);
+            printToFile("STORE","X1");
+            printToFile("SUB","10");
+            printToFile("BRPOS","OUT");
+            printToFile("ADD","10");
+            printToFile("WRITE","X1");
+            printToFile("OUT:","STOP");
+
+
     }
 
 }
@@ -129,6 +123,7 @@ void Runtime::statements(Node *branch, Stack stack) {
 		printToFile("ADD","1");
         printToFile("STORE",branch->value);
         printToFile("WRITE",branch->value);
+        return;
 	}
 	else if (branch->key == "mstat"){
 		if(branch->left != NULL)
