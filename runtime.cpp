@@ -63,27 +63,16 @@ void Runtime::statements(Node *branch, Stack stack) {
             printToFile("WRITE",result);
 	    }
 	}
-	else if (branch->key =="block"){
-        if(branch->right->left->center != NULL){
-        statements(branch->right->left->center,stack);
-        printToFile("STACKR","0");
-        printToFile("POP","");
-        printToFile("STORE","X3");
-        printToFile("WRITE","X3");
-        printToFile("STACKR","0");
-        printToFile("POP","");
-        printToFile("STORE","X2");
-        printToFile("WRITE","X2");
-        printToFile("STACKR","0");
-        printToFile("POP","");
-        printToFile("STORE","X1");
-        printToFile("WRITE","X1");
-        printToFile("STOP","");
-        printToFile("X1","0");
-        printToFile("X2","0");
-        printToFile("X3","0");
-        }
-    }
+
+	else if (branch->key == "block"){
+        statements(branch->right,stack);
+
+
+	}
+
+	else if(branch->key == "stats"){
+        statements(branch->left,stack);
+	}
 
     else if(branch->key == "IF"){
         cout << branch->left->id << "IFF" << endl;
