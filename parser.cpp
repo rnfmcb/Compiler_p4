@@ -1,7 +1,6 @@
 //Rachel Festervand
 //Program Translation
 //This is the parser file
-//This file uses a parser
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -90,7 +89,7 @@ void Parser::FADriver(ifstream &infile,string filename,Scanner& scanner){
 
 	    }
 		}
-        scanner.print();
+      //  scanner.print();
 		infile.close();
 
   }
@@ -121,7 +120,7 @@ Token* Parser:: getToken(Token *tkn){
 //I do not put this process in the tree
 void Parser::RO(Token *&tkn, Node*& tree){
 
-    cout << "token in RO" << tkn->instance << endl;
+   // cout << "token in RO" << tkn->instance << endl;
 
    	if(tkn->instance == "<" ) {
 	  tree->operate = tkn->instance;
@@ -133,7 +132,7 @@ void Parser::RO(Token *&tkn, Node*& tree){
 
     else if (tkn->instance == "="){
 		*&tkn = getToken(tkn);
-		cout << "token after equals" << tkn->instance << endl;
+		//cout << "token after equals" << tkn->instance << endl;
 		if (tkn->instance == ">" | tkn->instance == "<" | tkn->instance == "="){
             string operators = "= " + tkn->instance;
             tree->operate = operators;
@@ -221,7 +220,7 @@ void Parser::expr(Token *&tkn, Node *&tree){
 
     }
     else{
-        cout << "got this in expr" << tkn->instance << endl;
+		return;       
     }
 
 }
@@ -230,7 +229,7 @@ void Parser::expr(Token *&tkn, Node *&tree){
 void Parser::mstat(Token *&tkn, Node *&tree){
 	addLevel();
 	*&tkn = getToken(tkn);
-	cout << tkn->instance << endl;
+	//cout << tkn->instance << endl;
 	if(tkn->instance == "Read" | tkn->instance == "Output"  |
        tkn->instance == "IFF" | tkn->instance == "Loop" |
        tkn->tokenType == "IDTkn" | tkn->instance == "Begin") {
@@ -238,7 +237,7 @@ void Parser::mstat(Token *&tkn, Node *&tree){
 	   tree->left = newNode("stat");
 	   stat(tkn,tree->left);
 	   *&tkn = getToken(tkn);
-	   cout << tkn->instance << endl;
+	  // cout << tkn->instance << endl;
 	   if(tkn->instance == "End"){
 	       *&tkn = getToken(tkn);
            if(tkn->instance == ":"){
@@ -308,9 +307,9 @@ void Parser::stat(Token *&tkn, Node *&tree){
 			 if( tkn->tokenType == "IDTkn" ) {
 				data = tkn->tokenType ;
 				value = tkn->instance;
-				cout << tkn->instance << tkn->tokenType << endl;
+			//	cout << tkn->instance << tkn->tokenType << endl;
 				tkn = getToken(tkn);
-                cout << tkn->instance << endl;
+              //  cout << tkn->instance << endl;
 					if(tkn->instance == "]"){
 						tree->center = new Node;
 						tree->center = newNode("in");
@@ -345,7 +344,7 @@ void Parser::stat(Token *&tkn, Node *&tree){
 		tree->center->left->id = tkn->tokenType;
 		tree->center->left->value = tkn->instance;
 		*&tkn = getToken(tkn);
-		cout << tkn->instance << "begin" << endl;
+//		cout << tkn->instance << "begin" << endl;
 		if(tkn->instance == "INT"){
             vars(tree);
 
@@ -354,7 +353,7 @@ void Parser::stat(Token *&tkn, Node *&tree){
 		tree->center->right = newNode("stats");
 		tree->center->right->left = new Node;
 		tree->center->right->left = newNode("stat");
-		cout << "value in begin" << tkn->instance << endl;
+		//cout << "value in begin" << tkn->instance << endl;
 		tree->center->right->left->id = tkn->tokenType;
 		tree->center->right->left->value = tkn->instance;
 		stat(tkn,tree->center->right->left);
@@ -372,14 +371,14 @@ void Parser::stat(Token *&tkn, Node *&tree){
 			tree->center->left->id = tkn->tokenType;
 			tree->center->left->value = tkn->instance;
 			expr(tkn, tree->center->left);
-			cout << "tkn after expr" << tkn->instance << endl;
+		//	cout << "tkn after expr" << tkn->instance << endl;
 			RO(tkn,tree->center);
 			tree->center->center = new Node;
 			tree->center->center = newNode("expr");
 			tree->center->center->id = tkn->tokenType;
 			tree->center->center->value = tkn->instance;
 			expr(tkn, tree->center->center);
-			cout << tkn->instance << "in expr" << endl;
+			//cout << tkn->instance << "in expr" << endl;
 			if(tkn->instance == "]"){
 				tree->center->right = new Node;
 				tree->center->right = newNode("stat");
@@ -389,9 +388,9 @@ void Parser::stat(Token *&tkn, Node *&tree){
 				stat(tkn,tree->center->right);
 			}
 			else{
-			//	cout << "parser error in IFF: expected ], recieved ";
-			//	cout << tkn->instance << endl;
-			//	exit(EXIT_FAILURE);
+				cout << "parser error in IFF: expected ], recieved ";
+				cout << tkn->instance << endl;
+				exit(EXIT_FAILURE);
 			}
 		}
 		else{
@@ -412,14 +411,14 @@ void Parser::stat(Token *&tkn, Node *&tree){
 			tree->center->left->id = tkn->tokenType;
 			tree->center->left->value = tkn->instance;
 			expr(tkn, tree->center->left);
-			cout << "tkn after expr" << tkn->instance << endl;
+		//	cout << "tkn after expr" << tkn->instance << endl;
 			RO(tkn,tree->center);
 			tree->center->center = new Node;
 			tree->center->center = newNode("expr");
 			tree->center->center->id = tkn->tokenType;
 			tree->center->center->value = tkn->instance;
 			expr(tkn, tree->center->center);
-			cout << tkn->instance << "in expr" << endl;
+			//cout << tkn->instance << "in expr" << endl;
 			if(tkn->instance == "]"){
 				tree->center->right = new Node;
 				tree->center->right = newNode("stat");
@@ -494,12 +493,12 @@ void Parser:: begin(Token *&tkn, Node *&tree){
 		   tree->right->right->left = newNode("Stat");
 		   stat(tkn,tree->right->right->left);
 		   *&tkn = getToken(tkn);
-		   cout<<tkn->instance << endl;
+		  // cout<<tkn->instance << endl;
           if(tkn->instance == ":") {
               tree->right->right->right = new Node;
               tree->right->right->right = newNode("mstat");
 			  mstat(tkn,tree->right->right->right);
-			  cout << tkn->instance << endl;
+			//  cout << tkn->instance << endl;
 					if(tkn->instance == "Read" | tkn->instance == "Output"  |
    					    tkn->instance == "IFF" | tkn->instance == "Loop" |
        					tkn->tokenType == "IDTkn" | tkn->instance == "Begin") {
@@ -589,11 +588,11 @@ Node*  Parser::parse (ifstream &infile,string filename){
     tkn = scan.head; //First token
     //cout << tkn->instance << " token " << endl;
    root =  prog(tkn,root);
-   /* if(tkn->tokenType == "EOFtk")
+    if(tkn->tokenType == "EOFtk")
          cout << "parsing was a success" << endl;
     else {
         cout << "Parser error, expected EOFtkn" << endl;
-     }*/
+     }
      return root;
 
 }
